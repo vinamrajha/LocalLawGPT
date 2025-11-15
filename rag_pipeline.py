@@ -1,13 +1,11 @@
 from langchain_community.document_loaders import UnstructuredPDFLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.retrievers import BM25Retriever
-# from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from cohere import Client as CohereClient
 from langchain_cohere import CohereEmbeddings, ChatCohere
 from pinecone import Pinecone
 from langchain_pinecone import Pinecone as PineconeVectorStore
 from dotenv import load_dotenv
-from cohere import Client
 import os
 import pinecone
 from fastapi import FastAPI
@@ -58,11 +56,11 @@ def load_pipeline():
 
     ##Embedding
     try:
+        embeddings = CohereEmbeddings(model="embed-english-v3.0")
+        print("🟢 Cohere embeddings ready.")
         pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
         index = pc.Index("locallawgpt")
         print("🟢 Connected to Pinecone index: locallawgpt")
-        embeddings = CohereEmbeddings(model="embed-english-v3.0")
-        print("🟢 Cohere embeddings ready.")
     except Exception as e:
         print("❌ Error connecting to Pinecone:", e)
         return
@@ -99,7 +97,6 @@ class QueryRequest(BaseModel):
 def home():
     return "Welcome to LocalLaw GPT"
 
-print("ASK ENDPOINT REACHED!")
 @app.post("/ask")
 def ask_question(data: QueryRequest):
     global llm, co, vectorstore, bm25
