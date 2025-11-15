@@ -61,7 +61,7 @@ def load_pipeline():
         pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
         index = pc.Index("locallawgpt")
         print("🟢 Connected to Pinecone index: locallawgpt")
-        embeddings = CohereEmbeddings(model="embed-english-v3.0", input_type="search_document")
+        embeddings = CohereEmbeddings(model="embed-english-v3.0")
         print("🟢 Cohere embeddings ready.")
     except Exception as e:
         print("❌ Error connecting to Pinecone:", e)
