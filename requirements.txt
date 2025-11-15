@@ -9,3 +9,4 @@ pinecone-client
 cohere
 pydantic
 pypdf
+rank_bm25
