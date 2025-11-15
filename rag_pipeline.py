@@ -28,7 +28,7 @@ def load_pipeline():
     ##Initializing LLMs and Rerank
     # llm = ChatOpenAI(model="gpt-4o-mini")
     try:
-        llm = ChatCohere(model="embed-english-v3.0")
+        llm = ChatCohere(model="command-light")
         co = CohereClient(api_key=os.getenv("COHERE_API_KEY"))
         print("🟢 Cohere client + LLM initialized.")
     except Exception as e:
