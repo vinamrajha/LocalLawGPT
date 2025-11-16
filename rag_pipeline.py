@@ -11,9 +11,20 @@ import pinecone
 from fastapi import FastAPI
 from pydantic import BaseModel
 load_dotenv()
+from fastapi.middleware.cors import CORSMiddleware
+
 
 ##Loading Environment and Fast Api
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allow all frontend URLs
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 llm = None
 co = None
 vectorstore = None
@@ -124,7 +135,7 @@ def ask_question(data: QueryRequest):
         summary = llm.invoke(prompt)
         summarized_docs.append(summary.content)
     
-    context = f"Context: {summarized_docs}\n\n Query: {query}"
+    context = f"Context: {summarized_docs}n\n Query: {query}"
     response = llm.invoke(context)
 
     return {"answer": response.content}
