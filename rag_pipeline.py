@@ -131,11 +131,31 @@ def ask_question(data: QueryRequest):
 
     summarized_docs = []
     for chunk in final_doc:
-        prompt = f"Summarize this text in simple, concise language, but don't miss any important rules:\n\n{chunk.page_content}"
+        prompt = f"""Rewrite the following content into a clean, structured, human-friendly explanation.
+                    Rules:
+                    - Use short paragraphs.
+                    - Use bullet points wherever helpful.
+                    - Preserve all legal rules and important facts.
+                    - Make the output easy to skim.
+                    - Do NOT generate a single long paragraph.
+                    - Add section headings when relevant.
+
+                    Content:
+                    {chunk.page_content}"""
         summary = llm.invoke(prompt)
         summarized_docs.append(summary.content)
     
-    context = f"Context: {summarized_docs}n\n Query: {query}"
+    context = f"""
+                Use the following context to answer the user's question clearly, concisely, and with proper formatting.
+                Context:
+                {summarized_docs}
+
+                Question:
+                {query}
+
+                Answer:
+                """
+
     response = llm.invoke(context)
 
     return {"answer": response.content}
